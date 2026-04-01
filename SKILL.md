@@ -1,6 +1,6 @@
 ---
 name: translation-calibration
-description: Calibrate bilingual book-manuscript translations in `.docx` files with PDF or source-text reference support. Use when Codex needs to inspect paragraph-paired English/Chinese manuscripts, review translations in small section-local chunks, enforce terminology consistency, detect mistranslation/omission/format issues, and delete only the confirmed English source paragraphs after the user says the revised Chinese has already been applied.
+description: Calibrate bilingual book-manuscript translations in `.docx` files with PDF or source-text reference support. Use when Codex needs to inspect paragraph-paired bilingual manuscripts, review translations in small section-local chunks, enforce terminology consistency, detect mistranslation or omission, and delete only the confirmed source-language paragraphs after the user says the revised target-language text has already been applied.
 ---
 
 # Translation Calibration
@@ -9,11 +9,11 @@ description: Calibrate bilingual book-manuscript translations in `.docx` files w
 
 Calibrate bilingual book manuscripts conservatively. Keep fluent Chinese style intact unless meaning, terminology, consistency, or clear wording/format errors require a change.
 
-Delete English source text only after the user explicitly confirms the revised Chinese has been applied to the working manuscript.
+Delete source-language text only after the user explicitly confirms the revised target-language text has been applied to the working manuscript.
 
 ## Workflow
 
-1. Inspect the manuscript structure first. Use `scripts/inspect_docx_bilingual.py` to locate the requested section and confirm English/Chinese paragraph pairing before making suggestions.
+1. Inspect the manuscript structure first. Use `scripts/inspect_docx_bilingual.py` to locate the requested section and confirm bilingual paragraph pairing before making suggestions.
 2. Work in small chunks by default: `1-3` natural paragraphs within the current section. Keep titles, figure captions, lists, and prose as separate units when possible.
 3. Return calibration feedback in this default format:
    - section or paragraph range
@@ -26,15 +26,15 @@ Delete English source text only after the user explicitly confirms the revised C
    - obvious omission or over-translation
    - clear wording, punctuation, or formatting errors
 5. Prefer the manuscript's dominant terminology unless it is clearly wrong. Use [references/terminology-guidelines.md](references/terminology-guidelines.md) when terminology decisions matter.
-6. Keep bilingual technical terms when needed for clarity or consistency with the manuscript, especially for model families, algorithms, protocols, and framework names.
-7. After the user confirms the Chinese revision has been applied, run `scripts/delete_english_range_docx.py` in dry-run mode first. Confirm the candidate paragraph indices, then run the real deletion.
+6. Keep source-language technical terms when needed for clarity or consistency with the manuscript, especially for model families, algorithms, protocols, standards, and framework names.
+7. After the user confirms the revised translation has been applied, run `scripts/delete_english_range_docx.py` in dry-run mode first. Confirm the candidate paragraph indices, then run the real deletion.
 
 ## Deletion Rules
 
-- Never delete Chinese paragraphs.
+- Never delete target-language paragraphs.
 - Never delete beyond the confirmed section or paragraph range.
 - Anchor deletion by explicit section markers or by explicit paragraph indices.
-- Do not delete mixed Chinese/English paragraphs by default.
+- Do not delete mixed-language paragraphs by default.
 - Treat figure captions, section headings, and mixed glossary lines separately from ordinary prose.
 
 ## Scripts
@@ -43,7 +43,7 @@ Delete English source text only after the user explicitly confirms the revised C
   - Inspect a `.docx` and report paragraph indices plus nearby previews around a section marker or index range.
   - Use this before calibration and before deletion.
 - `scripts/delete_english_range_docx.py`
-  - Delete English-only paragraphs from a confirmed range in a `.docx`.
+  - Delete source-language-only paragraphs from a confirmed range in a `.docx`.
   - Supports section-text boundaries or explicit index ranges.
   - Requires a dry run first.
 
@@ -57,19 +57,19 @@ Delete English source text only after the user explicitly confirms the revised C
 ```bash
 # Inspect a section by heading text
 python3 scripts/inspect_docx_bilingual.py manuscript.docx \
-  --section-text "1.2.2 AI基础设施的深远影响：赋能各行业智能化解决方案"
+  --section-text "Chapter 2"
 
 # Inspect an explicit paragraph range
 python3 scripts/inspect_docx_bilingual.py manuscript.docx --start-index 320 --end-index 340
 
 # Dry-run deletion for a confirmed section
 python3 scripts/delete_english_range_docx.py manuscript.docx \
-  --section-text "1.2.2 AI基础设施的深远影响：赋能各行业智能化解决方案" \
-  --next-section-text "1.2.3 AI系统架构的核心组件" \
+  --section-text "Chapter 2" \
+  --next-section-text "Chapter 3" \
   --dry-run
 
-# Delete confirmed English-only paragraphs after dry-run review
+# Delete confirmed source-language-only paragraphs after dry-run review
 python3 scripts/delete_english_range_docx.py manuscript.docx \
-  --section-text "1.2.2 AI基础设施的深远影响：赋能各行业智能化解决方案" \
-  --next-section-text "1.2.3 AI系统架构的核心组件"
+  --section-text "Chapter 2" \
+  --next-section-text "Chapter 3"
 ```
