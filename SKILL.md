@@ -27,7 +27,7 @@ Delete source-language text only after the user explicitly confirms the revised 
    - clear wording, punctuation, or formatting errors
 5. Prefer the manuscript's dominant terminology unless it is clearly wrong. Use [references/terminology-guidelines.md](references/terminology-guidelines.md) when terminology decisions matter.
 6. Keep source-language technical terms when needed for clarity or consistency with the manuscript, especially for model families, algorithms, protocols, standards, and framework names.
-7. After the user confirms the revised translation has been applied, run `scripts/delete_english_range_docx.py` in dry-run mode first. Confirm the candidate paragraph indices, then run the real deletion.
+7. After the user confirms the revised translation has been applied, run `scripts/delete_source_range_docx.py` in dry-run mode first. Confirm the candidate paragraph indices, then run the real deletion.
 
 ## Deletion Rules
 
@@ -42,10 +42,12 @@ Delete source-language text only after the user explicitly confirms the revised 
 - `scripts/inspect_docx_bilingual.py`
   - Inspect a `.docx` and report paragraph indices plus nearby previews around a section marker or index range.
   - Use this before calibration and before deletion.
-- `scripts/delete_english_range_docx.py`
+- `scripts/delete_source_range_docx.py`
   - Delete source-language-only paragraphs from a confirmed range in a `.docx`.
   - Supports section-text boundaries or explicit index ranges.
   - Requires a dry run first.
+- `scripts/delete_english_range_docx.py`
+  - Backward-compatible wrapper for older workflows that still call the previous script name.
 
 ## References
 
@@ -63,13 +65,13 @@ python3 scripts/inspect_docx_bilingual.py manuscript.docx \
 python3 scripts/inspect_docx_bilingual.py manuscript.docx --start-index 320 --end-index 340
 
 # Dry-run deletion for a confirmed section
-python3 scripts/delete_english_range_docx.py manuscript.docx \
+python3 scripts/delete_source_range_docx.py manuscript.docx \
   --section-text "Chapter 2" \
   --next-section-text "Chapter 3" \
   --dry-run
 
 # Delete confirmed source-language-only paragraphs after dry-run review
-python3 scripts/delete_english_range_docx.py manuscript.docx \
+python3 scripts/delete_source_range_docx.py manuscript.docx \
   --section-text "Chapter 2" \
   --next-section-text "Chapter 3"
 ```

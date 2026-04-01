@@ -21,7 +21,8 @@ It is designed for `.docx` workflows where source text and translation appear to
 - `references/terminology-guidelines.md`: term consistency rules and example decision patterns
 - `references/workflow.md`: canonical calibration and deletion workflow
 - `scripts/inspect_docx_bilingual.py`: inspect section-local bilingual paragraph layout without editing
-- `scripts/delete_english_range_docx.py`: dry-run and delete confirmed source-language-only paragraphs from a `.docx`
+- `scripts/delete_source_range_docx.py`: dry-run and delete confirmed source-language-only paragraphs from a `.docx`
+- `scripts/delete_english_range_docx.py`: backward-compatible wrapper for older calls
 
 ## Typical workflow
 
