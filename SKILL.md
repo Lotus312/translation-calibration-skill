@@ -46,8 +46,6 @@ Delete source-language text only after the user explicitly confirms the revised 
   - Delete source-language-only paragraphs from a confirmed range in a `.docx`.
   - Supports section-text boundaries or explicit index ranges.
   - Requires a dry run first.
-- `scripts/delete_english_range_docx.py`
-  - Backward-compatible wrapper for older workflows that still call the previous script name.
 
 ## References
 
